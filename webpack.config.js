@@ -17,6 +17,14 @@ module.exports = {
     },
     module: {
         rules: [
+          {
+            test: /\.svg$/,
+            use: [
+              {
+                loader: 'file-loader',
+              },
+            ],
+          },
             {
                 test: /\.css/,
                 use: ['style-loader', 'css-loader'],
@@ -33,3 +41,5 @@ module.exports = {
         ],
     }
 }
+
+// remove svg from existing rule

@@ -1,5 +1,8 @@
-import React, { FC } from "react";
+import * as React from "react";
 import "./Button.css";
+import { LargeIcon } from "../icons/LargeIcon";
+import { SmallIcon } from "../icons/SmallIcon";
+import { MediumIcon } from "../icons/MediumIcon";
 
 export enum ButtonSize {
   large = 'large',
@@ -23,9 +26,10 @@ export interface ButtonProps {
   size: ButtonSize;
   variant: ButtonType;
   disabled: boolean;
+  hasIcon?: boolean;
 }
 
-export const Button: FC<ButtonProps> = ({ children, color, size, variant, disabled, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ children, color, size, variant, disabled, hasIcon, ...props }) => {
   const rootClasses = ["button"];
   
   
@@ -80,9 +84,89 @@ export const Button: FC<ButtonProps> = ({ children, color, size, variant, disabl
       rootClasses.push('skeleton-disabled')
     }
   }
+  
+  
+  let icon = null;
+  if (size === ButtonSize.small) {
+    icon = <SmallIcon/>;
+  } else if (size === ButtonSize.medium) {
+    icon = <MediumIcon/>;
+  } else if (size === ButtonSize.large) {
+    icon = <LargeIcon />
+    ;
+  }
+  
+  if(!hasIcon){
+    icon = null
+  }
+  if (!children && icon){
+    rootClasses.push('only-icon')
+    if(size === ButtonSize.large){
+      rootClasses.push('only-icon-large')
+    }
+    if(size === ButtonSize.medium){
+      rootClasses.push('only-icon-medium')
+    }
+    if(size === ButtonSize.small){
+      rootClasses.push('only-icon-small')
+    }
+  }
+
+  if(children && icon){
+    rootClasses.push('icon-right')
+    if(size === ButtonSize.large){
+      rootClasses.push('icon-right-large')
+    }
+    if(size === ButtonSize.medium){
+      rootClasses.push('icon-right-medium')
+    }
+    if(size === ButtonSize.small){
+      rootClasses.push('icon-right-small')
+    }
+  }
+
+  if(variant === 'skeleton'){
+    if(hasIcon && size === ButtonSize.large){
+     return <button disabled={disabled} {...props} className={rootClasses.join(' ')} style={{}}>
+      {children ? <span className="skeleton-btn-inner-large-with-icon"></span> : null}
+      <span className="icon-skeleton-large"></span>
+      </button>
+    }
+    if(hasIcon && size === ButtonSize.medium){
+     return <button disabled={disabled} {...props} className={rootClasses.join(' ')} style={{}}>
+      {children ? <span className="skeleton-btn-inner-medium-with-icon"></span> : null}
+      <span className="icon-skeleton-medium"></span>
+      </button>
+    }
+    if(hasIcon && size === ButtonSize.small){
+      return <button disabled={disabled} {...props} className={rootClasses.join(' ')} style={{}}>
+      {children ? <span className="skeleton-btn-inner-small-with-icon"></span> : null}
+       <span className="icon-skeleton-small"></span>
+       </button>
+     }
+
+     if(!hasIcon && size === ButtonSize.large){
+      return <button disabled={disabled} {...props} className={rootClasses.join(' ')} style={{}}>
+      <span className="skeleton-btn-inner-large"></span>
+      </button>
+     }
+
+     if(!hasIcon && size === ButtonSize.medium){
+      return <button disabled={disabled} {...props} className={rootClasses.join(' ')} style={{}}>
+      <span className="skeleton-btn-inner-medium"></span>
+      </button>
+     }
+     if(!hasIcon && size === ButtonSize.small){
+      return <button disabled={disabled} {...props} className={rootClasses.join(' ')} style={{}}>
+      <span className="skeleton-btn-inner-small"></span>
+      </button>
+     }
+  }
+
   return (
     <button disabled={disabled} {...props} className={rootClasses.join(' ')} style={{}}>
-      {children}
+    {children && <span>{children}</span>}
+    {icon && (<span>{icon}</span>)}
     </button>
   );
 };
